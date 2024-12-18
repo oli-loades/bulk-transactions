@@ -36,7 +36,7 @@ export class Transaction {
   value: number;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, required: true })
-  account: string;
+  account: string; // string as mongoose.Schema.Types.ObjectId has issues when fetching transactions
 }
 
 export const TransactionSchema = SchemaFactory.createForClass(Transaction);

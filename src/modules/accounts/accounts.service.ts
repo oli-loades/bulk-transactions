@@ -7,19 +7,21 @@ import { Account, AccountDocument } from './schemas/account.schema';
 @Injectable()
 export class AccountsService {
   constructor(
-    @InjectModel(Account.name) private transactionModel: Model<Account>,
+    @InjectModel(Account.name) private accountModel: Model<Account>,
   ) {}
 
   async getById(id: Types.ObjectId): Promise<AccountDocument> {
-    return this.transactionModel.findById(id).exec();
+    return this.accountModel.findById(id).exec();
   }
 
   async updateBalance(
-    id: Types.ObjectId,
+    accout: AccountDocument,
     newBalance: number,
   ): Promise<AccountDocument> {
-    return this.transactionModel
-      .findByIdAndUpdate(id, { balance: newBalance })
-      .exec();
+    return accout.updateOne({ balance: newBalance });
+  }
+
+  calculateBalance(account: AccountDocument, balanceChange: number): number {
+    return account.balance + balanceChange;
   }
 }
