@@ -1,4 +1,4 @@
-import { Inject } from '@nestjs/common';
+import { Inject, Logger } from '@nestjs/common';
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
 import { AccountsService } from '../accounts/accounts.service';
@@ -7,6 +7,8 @@ import { Types } from 'mongoose';
 
 @Processor('transactions')
 export class TransactionProcessor extends WorkerHost {
+  private readonly logger = new Logger(TransactionProcessor.name);
+
   @Inject(AccountsService)
   private readonly accountsService: AccountsService;
 
@@ -14,7 +16,6 @@ export class TransactionProcessor extends WorkerHost {
   private readonly transactionService: TransactionsService;
 
   async process(job: Job) {
-    console.log('job started');
     const transaction = await this.transactionService.getById(job.data.id);
     if (transaction) {
       let success = false;
@@ -28,9 +29,16 @@ export class TransactionProcessor extends WorkerHost {
         );
         await this.accountsService.updateBalance(account, newBalanace);
         success = true;
+      } else {
+        this.logger.warn(
+          `No account found for ${transaction.account} in job ${job.id}`,
+        );
       }
       await this.transactionService.updateStatus(transaction.id, success);
+    } else {
+      this.logger.warn(
+        `No Transaction found for ${job.data.id} in job ${job.id}`,
+      );
     }
-    console.log('job completed');
   }
 }

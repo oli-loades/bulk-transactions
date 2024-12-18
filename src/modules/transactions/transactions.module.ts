@@ -6,6 +6,7 @@ import { TransactionsService } from './transactions.service';
 import { Transaction, TransactionSchema } from './schemas/transaction.schema';
 import { AccountsModule } from '../accounts/accounts.module';
 import { TransactionProcessor } from './transactions.processor';
+import { TransactionsEventsListener } from './transactions.eventlistener';
 
 @Module({
   imports: [
@@ -18,6 +19,10 @@ import { TransactionProcessor } from './transactions.processor';
     AccountsModule,
   ],
   controllers: [TransactionsController],
-  providers: [TransactionsService, TransactionProcessor],
+  providers: [
+    TransactionsService,
+    TransactionProcessor,
+    TransactionsEventsListener,
+  ],
 })
 export class TransactionsModule {}
