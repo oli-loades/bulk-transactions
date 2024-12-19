@@ -24,4 +24,8 @@ export class AccountsService {
   calculateBalance(account: AccountDocument, balanceChange: number): number {
     return account.balance + balanceChange;
   }
+
+  isValidBalance(balance: number): boolean {
+    return balance >= 0;
+  }
 }
