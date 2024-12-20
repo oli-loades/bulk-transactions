@@ -35,32 +35,37 @@ export class TransactionsService {
   }
 
   async processTransaction(transactionId: Types.ObjectId): Promise<boolean> {
-    let success = false;
     const transaction = await this.getById(transactionId);
-    if (transaction && transaction.status === STATUS.PENDING) {
-      // issue - transaction.account has the type of Types.ObjectId but when passed to accountsService.getById acts as string
-      const accountId = new Types.ObjectId(transaction.account);
-      const account = await this.accountsService.getById(accountId);
-      if (account) {
-        const newBalanace = this.accountsService.calculateBalance(
-          account,
-          transaction.value,
-        );
-        if (this.accountsService.isValidBalance(newBalanace)) {
-          await this.accountsService.updateBalance(account, newBalanace);
-          success = true;
-        } else {
-          this.logger.warn(
-            `Transaction failed for ${transaction.id}: insufficient balance`,
-          );
-        }
-      } else {
-        this.logger.warn(`No account found for ${transaction.account}`);
-      }
-      await this.updateStatus(transaction.id, success);
-    } else {
+    if (!transaction || transaction.status !== STATUS.PENDING) {
       this.logger.warn(`No valid transaction found for ${transactionId}`);
+      return false;
     }
+
+    // issue - transaction.account has the type of Types.ObjectId but when passed to accountsService.getById acts as string
+    const accountId = new Types.ObjectId(transaction.account);
+    const account = await this.accountsService.getById(accountId);
+    if (!account) {
+      this.logger.warn(`No account found for ${transaction.account}`);
+      return false;
+    }
+
+    const newBalanace = this.accountsService.calculateBalance(
+      account,
+      transaction.value,
+    );
+
+    let success = false;
+    if (this.accountsService.isValidBalance(newBalanace)) {
+      await this.accountsService.updateBalance(account, newBalanace);
+      success = true;
+    } else {
+      this.logger.warn(
+        `Transaction failed for ${transaction.id}: insufficient balance`,
+      );
+    }
+
+    await this.updateStatus(transaction.id, success);
+
     return success;
   }
 }
