@@ -7,6 +7,7 @@ import { Transaction, TransactionSchema } from './schemas/transaction.schema';
 import { AccountsModule } from '../accounts/accounts.module';
 import { TransactionProcessor } from './transactions.processor';
 import { TransactionsEventsListener } from './transactions.eventlistener';
+import { TRANSACTIONS_QUEUE } from '../../contants';
 
 @Module({
   imports: [
@@ -14,7 +15,7 @@ import { TransactionsEventsListener } from './transactions.eventlistener';
       { name: Transaction.name, schema: TransactionSchema },
     ]),
     BullModule.registerQueue({
-      name: 'transactions',
+      name: TRANSACTIONS_QUEUE,
     }),
     AccountsModule,
   ],

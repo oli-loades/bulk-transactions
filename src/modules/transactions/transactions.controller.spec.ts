@@ -3,6 +3,7 @@ import { TransactionsController } from './transactions.controller';
 import { TransactionsService } from './transactions.service';
 import { Queue } from 'bullmq';
 import { getQueueToken } from '@nestjs/bullmq';
+import { TRANSACTIONS_QUEUE } from '../../contants';
 
 describe('TransactionsController', () => {
   const transactions = [
@@ -27,12 +28,12 @@ describe('TransactionsController', () => {
       controllers: [TransactionsController],
       providers: [
         TransactionsService,
-        { provide: getQueueToken('transactions'), useValue: Queue },
+        { provide: getQueueToken(TRANSACTIONS_QUEUE), useValue: Queue },
       ],
     })
       .overrideProvider(TransactionsService)
       .useValue(mockTransactionService)
-      .overrideProvider(getQueueToken('transactions'))
+      .overrideProvider(getQueueToken(TRANSACTIONS_QUEUE))
       .useValue(mockQueue)
       .compile();
 

@@ -3,3 +3,5 @@ export const STATUS = {
   SUCCESS: 'SUCCESS',
   FAILED: 'FAILED',
 };
+
+export const TRANSACTIONS_QUEUE = 'transactions';

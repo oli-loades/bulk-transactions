@@ -6,6 +6,7 @@ import { BulkCreateTransactionDto } from './dto/bulk-create-transaction.dto';
 import { Types } from 'mongoose';
 import { AccountsService } from '../accounts/accounts.service';
 import { STATUS } from '../../contants';
+
 @Injectable()
 export class TransactionsService {
   private readonly logger = new Logger(TransactionsService.name);

@@ -4,6 +4,7 @@ import { Model, Types } from 'mongoose';
 import { Transaction, TransactionDocument } from './schemas/transaction.schema';
 import { getModelToken } from '@nestjs/mongoose';
 import { AccountsService } from '../accounts/accounts.service';
+import { STATUS } from '../../contants';
 
 describe('TransactionsService', () => {
   let service: TransactionsService;
@@ -46,7 +47,7 @@ describe('TransactionsService', () => {
 
     mockPendingTransaction = {
       id: new Types.ObjectId(),
-      status: 'PENDING',
+      status: STATUS.PENDING,
       value: 100,
       account: '6762d84f4ab222af440dcef1',
     };
@@ -62,7 +63,7 @@ describe('TransactionsService', () => {
         mockPendingTransaction.id,
         true,
       );
-      expect(transaction.status).toEqual('SUCCESS');
+      expect(transaction.status).toEqual(STATUS.SUCCESS);
     });
 
     it('should return the transaction with the status of FAILED when flag is set to true', async () => {
@@ -70,7 +71,7 @@ describe('TransactionsService', () => {
         mockPendingTransaction.id,
         false,
       );
-      expect(transaction.status).toEqual('FAILED');
+      expect(transaction.status).toEqual(STATUS.FAILED);
     });
   });
 
