@@ -15,13 +15,13 @@ export class AccountsService {
   }
 
   async updateBalance(
-    accout: AccountDocument,
+    id: Types.ObjectId,
     newBalance: number,
   ): Promise<AccountDocument> {
-    return accout.updateOne({ balance: newBalance });
+    return this.accountModel.findByIdAndUpdate(id, { balance: newBalance });
   }
 
-  calculateBalance(account: AccountDocument, balanceChange: number): number {
+  calculateBalance(account: Account, balanceChange: number): number {
     return account.balance + balanceChange;
   }
 

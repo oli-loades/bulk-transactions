@@ -16,14 +16,12 @@ export class TransactionsService {
     private readonly accountsService: AccountsService,
   ) {}
 
-  async bulkCreate(
-    data: BulkCreateTransactionDto,
-  ): Promise<TransactionDocument[]> {
+  async bulkCreate(data: BulkCreateTransactionDto) {
     return this.transactionModel.insertMany(data.transactions);
   }
 
   async getById(id: Types.ObjectId): Promise<TransactionDocument> {
-    return this.transactionModel.findById(id).exec();
+    return this.transactionModel.findById(id).populate('account').exec();
   }
 
   async updateStatus(
@@ -41,22 +39,22 @@ export class TransactionsService {
       return false;
     }
 
-    // issue - transaction.account has the type of Types.ObjectId but when passed to accountsService.getById acts as string
-    const accountId = new Types.ObjectId(transaction.account);
-    const account = await this.accountsService.getById(accountId);
-    if (!account) {
+    if (!transaction.account) {
       this.logger.warn(`No account found for ${transaction.account}`);
       return false;
     }
 
     const newBalanace = this.accountsService.calculateBalance(
-      account,
+      transaction.account,
       transaction.value,
     );
 
     let success = false;
     if (this.accountsService.isValidBalance(newBalanace)) {
-      await this.accountsService.updateBalance(account, newBalanace);
+      await this.accountsService.updateBalance(
+        transaction.account.id,
+        newBalanace,
+      );
       success = true;
     } else {
       this.logger.warn(

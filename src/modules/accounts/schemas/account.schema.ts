@@ -22,6 +22,8 @@ export type AccountDocument = mongoose.HydratedDocument<Account>;
   },
 })
 export class Account {
+  id: mongoose.Types.ObjectId;
+
   @Prop()
   balance: number;
 }

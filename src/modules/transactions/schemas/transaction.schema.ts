@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
+import { Account } from '../../accounts/schemas/account.schema';
 
 export type TransactionDocument = mongoose.HydratedDocument<Transaction>;
 
@@ -35,8 +36,8 @@ export class Transaction {
   })
   value: number;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, required: true })
-  account: string; // string as mongoose.Schema.Types.ObjectId has issues when fetching transactions
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Account' })
+  account: Account;
 }
 
 export const TransactionSchema = SchemaFactory.createForClass(Transaction);
