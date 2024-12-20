@@ -4,7 +4,7 @@ import { Model, Types } from 'mongoose';
 import { Transaction, TransactionDocument } from './schemas/transaction.schema';
 import { getModelToken } from '@nestjs/mongoose';
 import { AccountsService } from '../accounts/accounts.service';
-import { STATUS } from '../../contants';
+import { STATUS } from '../../constants';
 
 describe('TransactionsService', () => {
   let service: TransactionsService;

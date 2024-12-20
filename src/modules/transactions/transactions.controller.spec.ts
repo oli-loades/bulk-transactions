@@ -3,7 +3,7 @@ import { TransactionsController } from './transactions.controller';
 import { TransactionsService } from './transactions.service';
 import { Queue } from 'bullmq';
 import { getQueueToken } from '@nestjs/bullmq';
-import { TRANSACTIONS_QUEUE } from '../../contants';
+import { TRANSACTIONS_QUEUE } from '../../constants';
 
 describe('TransactionsController', () => {
   const transactions = [

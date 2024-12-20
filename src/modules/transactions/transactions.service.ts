@@ -5,7 +5,7 @@ import { Transaction, TransactionDocument } from './schemas/transaction.schema';
 import { BulkCreateTransactionDto } from './dto/bulk-create-transaction.dto';
 import { Types } from 'mongoose';
 import { AccountsService } from '../accounts/accounts.service';
-import { STATUS } from '../../contants';
+import { STATUS } from '../../constants';
 
 @Injectable()
 export class TransactionsService {

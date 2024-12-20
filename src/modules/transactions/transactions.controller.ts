@@ -3,7 +3,7 @@ import { InjectQueue } from '@nestjs/bullmq';
 import { TransactionsService } from './transactions.service';
 import { BulkCreateTransactionDto } from './dto/bulk-create-transaction.dto';
 import { Queue } from 'bullmq';
-import { TRANSACTIONS_QUEUE } from '../../contants';
+import { TRANSACTIONS_QUEUE } from '../../constants';
 
 @Controller('bulk-transactions')
 export class TransactionsController {
