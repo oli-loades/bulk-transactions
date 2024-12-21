@@ -41,6 +41,7 @@ export class TransactionsService {
 
     if (!transaction.account) {
       this.logger.warn(`No account found for ${transaction.account}`);
+      await this.updateStatus(transaction.id, false);
       return false;
     }
 
@@ -49,21 +50,16 @@ export class TransactionsService {
       transaction.value,
     );
 
-    let success = false;
     if (this.accountsService.isValidBalance(newBalanace)) {
       await this.accountsService.updateBalance(
         transaction.account.id,
         newBalanace,
       );
-      success = true;
+      await this.updateStatus(transaction.id, true);
     } else {
       this.logger.warn(
         `Transaction failed for ${transaction.id}: insufficient balance`,
       );
     }
-
-    await this.updateStatus(transaction.id, success);
-
-    return success;
   }
 }
